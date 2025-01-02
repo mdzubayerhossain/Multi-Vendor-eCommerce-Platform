@@ -8,7 +8,11 @@ import { errorHandler, notFoundErrorHandler } from "./src/middlewares/errorHandl
 import userRouter from "./src/routes/userRoutes.js";
 import vendorRoutes from "./src/routes/vendorRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js"; // Ensure this import is correct
-
+import brandRoutes from "./src/routes/brandRoutes.js";
+import categoryRouter from "./src/routes/categoryRoutes.js";
+import { subCategory } from "./src/models/subCategoryModel.js";
+import subSubCategoryRouter from "./src/routes/subCategoryRoutes.js";
+import wishlistRouter from "./src/routes/wishlistRoutes.js";
 // Load environment variables
 dotenv.config();
 
@@ -39,7 +43,10 @@ app.use(cors());
 app.use("/api/user", userRouter);
 app.use("/api/vendor", vendorRoutes);
 app.use("/api/product", productRoutes); // Ensure this route is correct
-
+app.use("/api/brand", brandRoutes);
+app.use("api/wishlist", wishlistRouter)
+app.use("/api/category", categoryRouter);
+app.use("/api/subcategory", subSubCategoryRouter)
 // Not Found Error Handler
 app.use(notFoundErrorHandler);
 
