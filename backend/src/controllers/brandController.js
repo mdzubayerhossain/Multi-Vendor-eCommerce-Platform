@@ -1,7 +1,7 @@
 import { Brand } from "../models/brandModel.js";
-
+import expressAsyncHandler from "express-async-handler";
 import { AppError } from "../middlewares/errorHandler.js";
-import { Brand } from "../models/brandModel.js"
+
 // @desc Create a new brand
 // @route POST /api/brand/
 // @access private

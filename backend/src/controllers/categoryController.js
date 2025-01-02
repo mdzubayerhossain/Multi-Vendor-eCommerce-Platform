@@ -1,6 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import { AppError } from "../middlewares/errorHandler.js";
-import { Category } from "../models/subCategoryModel.js"
+import { Category } from "../models/categoryModel.js"
 // @desc Create a new category
 // @route POST /api/category/
 // @access private

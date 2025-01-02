@@ -4,15 +4,15 @@ import mongoose from "mongoose";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler, notFoundErrorHandler } from "./src/middlewares/errorHandler.js";
+import { errorHandler, notFoundErrorHandler } from "./src/middlewares/errorHandler.js"; // Ensure correct path
 import userRouter from "./src/routes/userRoutes.js";
 import vendorRoutes from "./src/routes/vendorRoutes.js";
-import productRoutes from "./src/routes/productRoutes.js"; // Ensure this import is correct
+import productRoutes from "./src/routes/productRoutes.js";
 import brandRoutes from "./src/routes/brandRoutes.js";
 import categoryRouter from "./src/routes/categoryRoutes.js";
-import { subCategory } from "./src/models/subCategoryModel.js";
-import subSubCategoryRouter from "./src/routes/subCategoryRoutes.js";
+import subCategoryRouter from "./src/routes/subCategoryRoutes.js"; // Correct path for subcategory routes
 import wishlistRouter from "./src/routes/wishlistRoutes.js";
+
 // Load environment variables
 dotenv.config();
 
@@ -42,11 +42,12 @@ app.use(cors());
 // API Routes
 app.use("/api/user", userRouter);
 app.use("/api/vendor", vendorRoutes);
-app.use("/api/product", productRoutes); // Ensure this route is correct
+app.use("/api/product", productRoutes);
 app.use("/api/brand", brandRoutes);
-app.use("api/wishlist", wishlistRouter)
+app.use("/api/wishlist", wishlistRouter);
 app.use("/api/category", categoryRouter);
-app.use("/api/subcategory", subSubCategoryRouter)
+app.use("/api/subcategory", subCategoryRouter); // Subcategory route
+
 // Not Found Error Handler
 app.use(notFoundErrorHandler);
 

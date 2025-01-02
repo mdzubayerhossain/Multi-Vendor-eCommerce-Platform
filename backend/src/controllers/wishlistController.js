@@ -1,6 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import { AppError } from "../middlewares/errorHandler.js";
-import { Wishlist } from "../models/subWishlistModel.js"
+import { Wishlist } from "../models/wishlistModel.js"
 // @desc Create a new wishlist
 // @route POST /api/wishlist/
 // @access private

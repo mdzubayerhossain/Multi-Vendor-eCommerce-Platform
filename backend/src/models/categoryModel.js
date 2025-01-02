@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
+
+// Define the category schema
 const categorySchema = new mongoose.Schema({
   name: {
     type: String,
@@ -6,17 +9,19 @@ const categorySchema = new mongoose.Schema({
     unique: true,
   },
   description: String,
-  slug:String,
-  subCategory: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "subCategory",
-    },
-  ],
-}, {timeseries: true});
+  slug: {
+    type: String,
+    unique: true,
+  },
+}, { timestamps: true });
 
+// Pre-save hook to create a slug from the name
 categorySchema.pre("save", function (next) {
-  this.slug = slugify(this.name.toLowerCase(), { lower: true });
-  next();
+    if (this.name) {
+        this.slug = slugify(this.name.toLowerCase(), { lower: true });
+    }
+    next();
 });
-export const Category= mongoose.model("Category", categorySchema)
+
+// Create the model for category
+export const Category = mongoose.model("Category", categorySchema);

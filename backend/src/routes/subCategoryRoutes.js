@@ -1,21 +1,20 @@
 import express from "express";
 import {
     createSubCategory,
+    getAllSubCategories,
     getASubCategoryBySlug,
-    getAllSubCategorys,
+    getASubCategoryById,
     updateASubCategory,
     deleteASubCategory,
-    getASubCategoryById // Ensure this import
-} from "../controllers/subSubCategoryController.js";
-import { protect } from "../middlewares/authMiddleware.js";
+} from "../controllers/subCategoryController.js"; // Ensure this is correctly imported
 
 const subSubCategoryRouter = express.Router();
 
-subSubCategoryRouter.post("/", protect, createSubCategory);
-subSubCategoryRouter.get("/all",getAllSubCategorys);
-subSubCategoryRouter.get("/:slug", getASubCategoryBySlug);
-subSubCategoryRouter.get("/:id", getASubCategoryById); // Ensure this route
-subSubCategoryRouter.put("/:id", protect, updateASubCategory);
-subSubCategoryRouter.delete("/:id", protect, deleteASubCategory); // Ensure this route
+subSubCategoryRouter.post("/", createSubCategory);
+subSubCategoryRouter.get("/all", getAllSubCategories);
+subSubCategoryRouter.get("/:slug", getASubCategoryBySlug); // Correctly use the slug
+subSubCategoryRouter.get("/:id", getASubCategoryById);
+subSubCategoryRouter.put("/:id", updateASubCategory);
+subSubCategoryRouter.delete("/:id", deleteASubCategory);
 
 export default subSubCategoryRouter;
