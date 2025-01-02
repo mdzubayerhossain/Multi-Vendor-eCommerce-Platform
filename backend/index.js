@@ -12,6 +12,7 @@ import brandRoutes from "./src/routes/brandRoutes.js";
 import categoryRouter from "./src/routes/categoryRoutes.js";
 import subCategoryRouter from "./src/routes/subCategoryRoutes.js"; // Correct path for subcategory routes
 import wishlistRouter from "./src/routes/wishlistRoutes.js";
+import reviewRouter from "./src/routes/reviewRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -47,6 +48,7 @@ app.use("/api/brand", brandRoutes);
 app.use("/api/wishlist", wishlistRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/subcategory", subCategoryRouter); // Subcategory route
+app.use("/api/review", reviewRouter)
 
 // Not Found Error Handler
 app.use(notFoundErrorHandler);
