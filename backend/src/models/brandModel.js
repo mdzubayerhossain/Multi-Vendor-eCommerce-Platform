@@ -6,6 +6,10 @@ const brandSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
+        slug:{
+            type : String,
+            unique : true
+        },
 
         description: String,
         logo: String,

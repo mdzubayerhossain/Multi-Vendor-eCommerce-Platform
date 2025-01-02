@@ -1,7 +1,5 @@
-// src/models/productModel.js
 import mongoose from "mongoose";
-import { Vendor } from "./vendorModel.js"; // Ensure this path is correct
-import slugify from "slugify"; // Ensure you have slugify installed
+import slugify from "slugify";
 
 const productVariationSchema = new mongoose.Schema({
     color: {
@@ -29,10 +27,12 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     slug: {
+        type: String,
         unique: true,
-        type: String
     },
-    description: String,
+    description: {
+        type: String,
+    },
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Vendor",
@@ -41,7 +41,6 @@ const productSchema = new mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
-
     },
     subcategory: {
         type: mongoose.Schema.Types.ObjectId,
@@ -53,7 +52,7 @@ const productSchema = new mongoose.Schema({
     },
     image: [String],
     variarions: [productVariationSchema],
-    ratingAvarage: {
+    ratingAverage: {
         type: Number,
         default: 0,
     },
@@ -63,14 +62,14 @@ const productSchema = new mongoose.Schema({
     },
     reviews: [
         {
-            type: mongoose.Schema.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Review",
         },
     ],
 }, { timestamps: true });
 
-productSchema.pre("save", async function (next) {
-    this.slug = slugify(this.name.toLowerCase());
+productSchema.pre("save", function (next) {
+    this.slug = slugify(this.name.toLowerCase(), { lower: true });
     next();
 });
 
