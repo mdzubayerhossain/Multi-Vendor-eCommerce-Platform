@@ -16,4 +16,9 @@ const brandSchema = new mongoose.Schema(
     },
     {timeseries: ture}
 );
+
+brandSchema.pre("save", function (next) {
+    this.slug = slugify(this.name.toLowerCase(), { lower: true });
+    next();
+});
 export const Brand = mongoose.model("Brand", brandSchema)

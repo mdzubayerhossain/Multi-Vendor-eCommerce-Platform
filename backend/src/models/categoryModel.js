@@ -6,16 +6,17 @@ const categorySchema = new mongoose.Schema({
     unique: true,
   },
   description: String,
-  parentCategory: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-  },
+  slug:String,
   subCategory: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "subCategory",
     },
   ],
 }, {timeseries: true});
 
+categorySchema.pre("save", function (next) {
+  this.slug = slugify(this.name.toLowerCase(), { lower: true });
+  next();
+});
 export const Category= mongoose.model("Category", categorySchema)
