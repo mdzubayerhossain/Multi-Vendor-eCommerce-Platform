@@ -1,112 +1,115 @@
-
 import expressAsyncHandler from "express-async-handler";
 import { AppError } from "../middlewares/errorHandler.js";
 import { Review } from "../models/reviewModel.js";
 
-// @desc Create a new Reviw
-// @route POST /api/Review/
+// @desc Create a new review
+// @route POST /api/review/
 // @access Private
-export const createReview= expressAsyncHandler(async (req,res) => {
-    try{
-        const newReview= await Review.create(req.body);
-        res.status(201).json({ status: true, data: newCategory});
+export const createReview = expressAsyncHandler(async (req, res) => {
+    const { comment, rating, product } = req.body;
+    const user = req.user.id; // Use the authenticated user's ID
 
-    } catch(error){
-        throw new AppError(error,400);
+    // Check for missing required fields
+    if (!user || !comment || !rating || !product) {
+        throw new AppError("All fields are required (user, comment, rating, product)", 400);
     }
-})
 
-// @desc Get all reviews
+    try {
+        const newReview = await Review.create({
+            user,
+            comment,
+            rating,
+            product,
+        });
+        res.status(201).json({ status: true, data: newReview });
+    } catch (error) {
+        console.error("Error creating review:", error); // Add debug log
+        if (error.code === 11000) {
+            throw new AppError("Review already exists for this user and product", 400);
+        }
+        throw new AppError("Server error", 500);
+    }
+});
+
+// @desc Get all reviews with pagination
 // @route GET /api/review/all
 // @access Public
 export const getAllReviews = expressAsyncHandler(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     try {
-        const brands = await Review.find();
-        res.status(200).json({ status: true, data: brands });
+        const reviews = await Review.find().skip(skip).limit(limit).populate("user", "name").populate("product", "name");
+        const total = await Review.countDocuments();
+
+        res.status(200).json({ status: true, data: reviews, total, page, pages: Math.ceil(total / limit) });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Error getting reviews:", error); // Add debug log
+        throw new AppError("Server error", 500);
     }
 });
 
-// @desc Get a Review by ID
-// @route GET /api/Review/brand/:id
-// @access Public
-export const getAReviewBySld = expressAsyncHandler(async (req, res) => {
-    try {
-        const reviews = await Review.findOne({ id: req.params.id  });
-        if (brand) {
-            res.status(200).json({ status: true, data: brand });
-        } else {
-            res.status(404).json({ message: "Brand Not Found!" });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
-});
-
-// @desc Get a brand by ID
-// @route GET /api/brand/:id
+// @desc Get a review by ID
+// @route GET /api/review/:id
 // @access Public
 export const getAReviewById = expressAsyncHandler(async (req, res) => {
     try {
-        const review = await Brand.findById(req.params.id);
-        if (brand) {
-            res.status(200).json({ status: true, data: brand });
-        } else {
-            res.status(404).json({ message: "Brand Not Found!" });
+        const review = await Review.findById(req.params.id).populate("user", "name").populate("product", "name");
+        if (!review) {
+            throw new AppError("Review Not Found!", 404);
         }
+        res.status(200).json({ status: true, data: review });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Error getting review by ID:", error); // Add debug log
+        throw new AppError("Server error", 500);
     }
 });
 
-// @desc Update a brand
-// @route PUT /api/brand/:id
-// @access private
+// @desc Update a review
+// @route PUT /api/review/:id
+// @access Private
 export const updateAReview = expressAsyncHandler(async (req, res) => {
     try {
-        const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
-        if (review) {
-            res.status(200).json({ status: true, data: review });
-        } else {
-            res.status(404).json({ message: "Review Not Found!" });
+        const review = await Review.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate("user", "name").populate("product", "name");
+        if (!review) {
+            throw new AppError("Review Not Found!", 404);
         }
+        res.status(200).json({ status: true, data: review });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Error updating review:", error); // Add debug log
+        throw new AppError("Server error", 500);
     }
 });
 
-// @desc Delete a Review
+// @desc Delete a review
 // @route DELETE /api/review/:id
-// @access private
+// @access Private
 export const deleteAReview = expressAsyncHandler(async (req, res) => {
     try {
         const review = await Review.findByIdAndDelete(req.params.id);
-        if (review) {
-            res.status(200).json({ status: true, message: "Review Deleted Successfully!" });
-        } else {
-            res.status(404).json({ message: "Review Not Found!" });
+        if (!review) {
+            throw new AppError("Review Not Found!", 404);
         }
+        res.status(200).json({ status: true, message: "Review Deleted Successfully!" });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Error deleting review:", error); // Add debug log
+        throw new AppError("Server error", 500);
     }
 });
 
-
-// @desc Update is Approved
-// @route DELETE /api/review/approve-request
-// @access private
+// @desc Approve a review
+// @route PUT /api/review/:id/approve
+// @access Private
 export const approveAReview = expressAsyncHandler(async (req, res) => {
     try {
-        const review = await Review.findByIdAndUpdate(req.params.id,{isApproved:req.body.isApproved},{new: true});
-        if (review) {
-            res.status(200).json({ status: true, message: "Review Approved Successfully!" });
-        } else {
-            res.status(404).json({ message: "Review Not Found!" });
+        const review = await Review.findByIdAndUpdate(req.params.id, { isApproved: true }, { new: true }).populate("user", "name").populate("product", "name");
+        if (!review) {
+            throw new AppError("Review Not Found!", 404);
         }
+        res.status(200).json({ status: true, message: "Review Approved Successfully!", data: review });
     } catch (error) {
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Error approving review:", error); // Add debug log
+        throw new AppError("Server error", 500);
     }
 });

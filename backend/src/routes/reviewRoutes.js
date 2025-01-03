@@ -1,19 +1,22 @@
+// src/routes/reviewRoutes.js
 import express from "express";
 import {
-    approveAReview,
     createReview,
-    deleteAReview,
-    getAReviewById,
     getAllReviews,
+    getAReviewById,
     updateAReview,
-    } from "../controllers/reviewController.js";
+    deleteAReview,
+    approveAReview
+} from "../controllers/reviewController.js";
+import { protect } from "../middlewares/authMiddleware.js";
+
 const reviewRouter = express.Router();
 
-reviewRouter.post("/", createReview);
-reviewRouter.get("/all",getAllReviews);
-reviewRouter.get("/:id", getAReviewById); // Ensure this route
-reviewRouter.put("/:id", updateAReview);
-reviewRouter.put("/approve-request", approveAReview);
-reviewRouter.delete("/:id",  deleteAReview); // Ensure this route
+reviewRouter.post("/", protect, createReview);
+reviewRouter.get("/all", getAllReviews); // Ensure this route is correct
+reviewRouter.get("/:id", getAReviewById);
+reviewRouter.put("/:id", protect, updateAReview);
+reviewRouter.delete("/:id", protect, deleteAReview);
+reviewRouter.put("/:id/approve", protect, approveAReview);
 
 export default reviewRouter;

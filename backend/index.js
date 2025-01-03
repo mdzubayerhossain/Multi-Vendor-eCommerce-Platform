@@ -1,18 +1,17 @@
+// index.js
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-import { errorHandler, notFoundErrorHandler } from "./src/middlewares/errorHandler.js"; // Ensure correct path
+import { errorHandler, notFoundErrorHandler } from "./src/middlewares/errorHandler.js";
 import userRouter from "./src/routes/userRoutes.js";
 import vendorRoutes from "./src/routes/vendorRoutes.js";
 import productRoutes from "./src/routes/productRoutes.js";
-import brandRoutes from "./src/routes/brandRoutes.js";
-import categoryRouter from "./src/routes/categoryRoutes.js";
-import subCategoryRouter from "./src/routes/subCategoryRoutes.js"; // Correct path for subcategory routes
-import wishlistRouter from "./src/routes/wishlistRoutes.js";
-import reviewRouter from "./src/routes/reviewRoutes.js";
+import categoryRoutes from "./src/routes/categoryRoutes.js";
+import subCategoryRoutes from "./src/routes/subCategoryRoutes.js";
+import reviewRoutes from "./src/routes/reviewRoutes.js"; // Ensure this import is correct
 
 // Load environment variables
 dotenv.config();
@@ -44,11 +43,9 @@ app.use(cors());
 app.use("/api/user", userRouter);
 app.use("/api/vendor", vendorRoutes);
 app.use("/api/product", productRoutes);
-app.use("/api/brand", brandRoutes);
-app.use("/api/wishlist", wishlistRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api/subcategory", subCategoryRouter); // Subcategory route
-app.use("/api/review", reviewRouter)
+app.use("/api/category", categoryRoutes);
+app.use("/api/subcategory", subCategoryRoutes);
+app.use("/api/review", reviewRoutes); // Ensure this route is correct
 
 // Not Found Error Handler
 app.use(notFoundErrorHandler);

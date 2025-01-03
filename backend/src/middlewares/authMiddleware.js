@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
-import { AppError } from "./errorHandler.js";
+import { AppError } from "../middlewares/errorHandler.js";
 
 // Middleware to protect routes and verify JWT token
 export const protect = async (req, res, next) => {
@@ -13,6 +13,7 @@ export const protect = async (req, res, next) => {
             req.user = await User.findById(decoded.id).select("-password");
             next();
         } catch (error) {
+            console.error("Token verification failed:", error); // Debug log
             return next(new AppError("Not Authorized, token failed", 401));
         }
     }

@@ -18,7 +18,10 @@ const reviewSchema = new mongoose.Schema(
             min: 1,
             max: 5,
         },
-        comment: String,
+        comment: {
+            type: String,
+            required: true,
+        },
         vendorReply: {
             comment: String,
             createdAt: {
@@ -26,7 +29,7 @@ const reviewSchema = new mongoose.Schema(
                 default: Date.now,
             },
         },
-        isApproved:{
+        isApproved: {
             type: Boolean,
             default: false,
         },
@@ -35,4 +38,5 @@ const reviewSchema = new mongoose.Schema(
 );
 
 reviewSchema.index({ user: 1, product: 1 }, { unique: true });
+
 export const Review = mongoose.model("Review", reviewSchema);
