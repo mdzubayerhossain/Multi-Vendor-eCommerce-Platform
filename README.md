@@ -41,7 +41,7 @@ The **Multi-Vendor eCommerce Platform** is a robust, feature-rich open-source pl
 - REST API
 
 ### Database:
-- PostgreSQL/MySQL
+- PostgreSQL/MySQL/Mongodb
 
 ### Other Tools:
 - Docker (for containerization)
